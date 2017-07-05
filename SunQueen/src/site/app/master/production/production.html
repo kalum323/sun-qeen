@@ -1,0 +1,92 @@
+<div class="index-content-header">
+</div>
+
+<div class="index-content-body">        
+    <div class="col-xs-4 background-dark">
+        <div style="display: flex; flex-flow: column; height: calc(100vh - 52px);">
+            <table class="control-table">
+                <col style="width: 35%"/>
+                <col style="width: 65%"/>
+
+                <tbody>                   
+                    <tr>
+                        <td><label class="control-label">Line</label></td>
+                        <td><input id="order" class="form-control" ng-model="model.plans.line" ng-keypress="ui.load(model.plans.line, $event)" ng-disabled="ui.mode !== 'NEW' && ui.mode !== 'EDIT'" ></td>
+                    </tr>
+                    <tr>
+                        <td><label class="control-label">PO No</label></td>
+                        <td><input class="form-control" ng-model="model.plans.orderDetail.poNo"  ng-disabled="ui.mode !== 'NEW' && ui.mode !== 'EDIT'" ></td>
+                    </tr>
+                    <tr>
+                        <td><label class="control-label">Plan No</label></td>
+                        <td><input class="form-control" ng-model="model.production.planing" ng-disabled="ui.mode !== 'NEW' && ui.mode !== 'EDIT'"></td>
+                    </tr>
+                    <tr>
+                        <td><label class="control-label">Date</label></td>
+                        <td><input type="date" class="form-control" ng-model="model.production.date" ng-disabled="ui.mode !== 'NEW' && ui.mode !== 'EDIT'"></td>
+                    </tr>
+                    <tr>
+                        <td><label class="control-label">Product qty</label></td>
+                        <td><input class="form-control" ng-model="model.production.productQty" ng-disabled="ui.mode !== 'NEW' && ui.mode !== 'EDIT'"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+<!--    <div class="col-xs-8 background-light">
+        
+        <table class="table-hover">
+            <col style="width: 10%">
+            <col style="width: 10%">
+            <col style="width: 15%">
+            <col style="width: 15%">
+            <col style="width: 15%">
+            <col style="width: 15%">
+            <col style="width: 15%">
+            <thead class="background-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Line</th>
+                    <th>Date</th>
+                    <th>QTY</th>
+                    <th>Minutes</th>
+                    <th>Workers</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+        </table>
+        <div class="smart-scroll-y" style="height: calc(100vh - 270px);">
+            <table class="table-hover">
+
+                <col style="width: 10%">
+                <col style="width: 10%">
+                <col style="width: 15%">
+                <col style="width: 15%">
+                <col style="width: 15%">
+                <col style="width: 15%">
+                <col style="width: 15%">
+                <tbody>
+                    <tr ng-repeat="plans in model.plansList|filter : model.search.name">
+                        <td>{{plans.indexNo}}</td>
+                        <td>{{plans.line}}</td>
+                        <td>{{plans.date}}</td>
+                        <td>{{plans.qty}}</td>
+                        <td>{{plans.minutes}}</td>
+                        <td>{{plans.workers}}</td>
+
+                        <td class="text-right" style="padding-left: 5px;">
+                            <a class="btn btn-primary" ng-click="ui.edit(plans, $index)"><span class="glyphicon glyphicon-edit"></span></a>
+                            <a class="btn btn-danger" ng-click="ui.delete(plans.indexNo, $index)"><span class="glyphicon glyphicon-trash"></span></a>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>-->
+</div>
+<div class="fab-container">
+    <a class="fab fab-lg fab-primary" ng-show="ui.mode === 'IDEAL' || ui.mode === 'SELECTED'" ng-click="ui.new();"><i class="glyphicon glyphicon-plus"></i></a>
+    <a class="fab fab-lg fab-primary" ng-show="ui.mode === 'NEW' || ui.mode === 'EDIT'" ng-click="ui.save();"><i class="glyphicon glyphicon-ok"></i></a>
+</div>

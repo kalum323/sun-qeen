@@ -1,0 +1,266 @@
+@import "mixins/variables.scss";
+
+table{
+    width: 100%;
+    border-spacing:0 5px;
+    border-collapse: separate;
+    margin-bottom: 0px;
+    table-layout: fixed;
+
+    //smart scroll
+    /*padding-right: 5px;*/
+}
+
+/*smart scroll*/
+.smart-scroll-y table{
+    padding-right: 0px !important; 
+}
+
+thead{
+    font-weight: 500;
+}
+
+tbody{
+
+}
+
+tr{
+    line-height: 30px;
+}
+
+th, td {
+    border-top: 1px solid;
+    border-right: 0px solid;
+    border-bottom: 1px solid;
+    border-left: 0px solid;
+}
+
+tr > th:first-child, tr > td:first-child{
+    border-radius: 3px 0 0 3px;
+
+    border-top: 1px solid;
+    border-right: 0px solid;
+    border-bottom: 1px solid;
+    border-left: 1px solid;
+}
+
+tr > th:last-child, tr > td:last-child{
+    border-radius: 0 3px 3px 0;
+
+    border-top: 1px solid;
+    border-right: 1px solid;
+    border-bottom: 1px solid;
+    border-left: 0px solid;
+}
+
+tr > td:first-child:last-child, tr > th:first-child:last-child{
+    border-radius: 3px 3px 3px 3px !important;
+
+    border-top: 1px solid;
+    border-right: 1px solid;
+    border-bottom: 1px solid;
+    border-left: 1px solid;
+}
+
+th{
+    padding: 0 10px 0 10px;
+    text-transform: uppercase;
+}
+
+td{
+    padding: 0 10px 0 10px;
+}
+
+/*-------------effects colors--------------*/
+.table-hover, .background-dark .table-hover{
+    cursor: pointer;
+
+    tbody{
+        tr:hover{
+            background-color: $default-color;
+            color: $light-font-color !important;
+            background-clip: padding-box;
+
+            td{
+                border-color: $default-color-border !important;
+            }
+        }  
+    }
+}
+.table-hover.table-default, .background-dark .table-hover.table-default {
+    tbody{
+        tr:hover{
+            background-color: $default-color !important;
+
+            td{
+                border-color: $default-color-border !important;
+            }
+        }  
+    }
+}
+/*-------------background colors--------------*/
+.background-light tr, .background-light tr{
+    background-color: $bg-dark-color;
+
+    th, td{
+        border-color: $bg-dark-color-border !important;
+    }
+}
+
+.background-dark tr, .background-dark tr{
+    background-color: $bg-hi-dark-color;
+
+    th, td{
+        border-color: $bg-hi-dark-color-border !important;
+    }
+}
+
+/*-------------form-controls-----------------*/
+th > label, td > label{
+    margin-bottom: 0px;
+}
+th > .form-control, td > .form-control{
+    margin-bottom: 5px;
+}
+
+.control-table  th > .form-control,.control-table  td > .form-control{
+    margin-top: 5px !important;
+    margin-bottom: 5px !important;
+}
+
+.control-table.with-label  th > .form-control,.control-table.with-label  td > .form-control{
+    margin-top: 0px !important;
+    margin-bottom: 5px !important;
+}
+
+.background-dark .control-table .form-control{
+    background-color: $bg-dark-color;
+}
+
+.background-light .control-table .form-control{
+    background-color: $bg-light-color;
+}
+
+th >  .btn, td > .btn{
+    height: 24px;
+    width: 24px;
+    border-radius: 100%;
+    font-size: 75%;
+    padding: 0px;
+    line-height: 24px;
+}
+
+tbody tr .btn{
+    background-color: transparent;
+    border-color: transparent;
+    color: inherit;
+}
+tbody tr .btn-default{
+    color: $default-color !important;
+}
+tbody tr .btn-primary{
+    color: $primary-color !important;
+}
+tbody tr .btn-info{
+    color: $info-color !important;
+}
+tbody tr .btn-success{
+    color: $success-color !important;
+}
+tbody tr .btn-warning{
+    color: $warning-color !important;
+}
+tbody tr .btn-danger{
+    color: $danger-color !important;
+}
+.table-hover{
+    tbody{
+        tr:hover{
+            .btn{
+                color: inherit !important;
+            }
+        }  
+    }
+}
+
+.selected,.background-dark .selected,.background-light .selected{
+    background-color:#5093E1 !important;
+    color:white;
+    background-clip: padding-box;
+
+    td, th{
+        border-color: $primary-color-border !important;
+    }
+}
+
+table .background-default td,
+.background-dark table .background-default td
+.background-light table .background-default td
+table .background-default th,
+.background-dark table .background-default th
+.background-light table .background-default th
+{
+    border-color: $default-color-border !important;
+}
+
+table .background-primary td,
+.background-dark table .background-primary td
+.background-light table .background-primary td
+table .background-primary th,
+.background-dark table .background-primary th
+.background-light table .background-primary th
+{
+    border-color: $primary-color-border !important;
+}
+
+table .background-info td,
+.background-dark table .background-info td
+.background-light table .background-info td
+table .background-info th,
+.background-dark table .background-info th
+.background-light table .background-info th
+{
+    border-color: $info-color-border !important;
+}
+
+table .background-success td,
+.background-dark table .background-success td
+.background-light table .background-success td
+table .background-success th,
+.background-dark table .background-success th
+.background-light table .background-success th
+{
+    border-color: $success-color-border !important;
+}
+
+table .background-warning td,
+.background-dark table .background-warning td
+.background-light table .background-warning td
+table .background-warning th,
+.background-dark table .background-warning th
+.background-light table .background-warning th
+{
+    border-color: $warning-color-border !important;
+}
+
+table .background-danger td,
+.background-dark table .background-danger td
+.background-light table .background-danger td
+table .background-danger th,
+.background-dark table .background-danger th
+.background-light table .background-danger th
+{
+    border-color: $danger-color-border !important;
+}
+
+/*animation*/
+tr.ng-enter{
+    animation: 0.5s bounceIn;
+}
+
+tr.ng-leave{
+    animation: 0.5s bounceOut;
+}
+.tick text {
+    font-size: 50%;
+}

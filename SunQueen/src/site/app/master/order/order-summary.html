@@ -1,0 +1,134 @@
+<div class="index-content-header">
+</div>
+
+<div class="index-content-body">        
+    <div class="col-xs-4 background-dark">
+        <div style="display: flex; flex-flow: column; height: calc(100vh - 52px);">
+            <table class="control-table">
+                <col style="width: 35%"/>
+                <col style="width: 65%"/>
+
+                <tbody>                   
+                    <tr>
+                        <td><label class="control-label">Order No</label></td>
+                        <td><input id="pono" class="form-control" ng-model="model.order.orderNo" ng-keypress="ui.load(model.order.orderNo, $event)" ng-disabled="ui.mode !== 'NEW' && ui.mode !== 'EDIT'"></td>
+                    </tr>
+                    <tr>
+                        <td><label class="control-label">Customer</label></td>
+                        <td><input id="pono" class="form-control" ng-model="model.order.customer" ng-disabled="ui.mode !== 'NEW' && ui.mode !== 'EDIT'"   uib-typeahead="customer.indexNo as (customer.indexNo + ' - ' +  customer.name) for customer in model.customerList |filter:$viewValue|limitTo:10" typeahead-input-formatter="model.customerLable($model)"></td>
+                    </tr>
+                    <tr>
+                        <td><label class="control-label">Date</label></td>
+                        <td><input type="date" class="form-control" ng-model="model.order.date" ng-disabled="ui.mode !== 'NEW' && ui.mode !== 'EDIT'" ></td>
+                    </tr>
+                    <tr>
+                        <td><label class="control-label">Style</label></td>
+                        <td><input class="form-control" ng-model="model.order.style" ng-disabled="ui.mode !== 'NEW' && ui.mode !== 'EDIT'"></td>
+                    </tr>
+                    <tr>
+                        <td><label class="control-label">Brand</label></td>
+                        <td><input class="form-control" ng-model="model.order.brand" ng-disabled="ui.mode !== 'NEW' && ui.mode !== 'EDIT'"></td>
+                    </tr>  
+                    <tr>
+                        <td><label class="control-label">QTY</label></td>
+                        <td><input class="form-control" ng-model="model.order.qty" ng-disabled="ui.mode !== 'NEW' && ui.mode !== 'EDIT'"></td>
+                    </tr>  
+                    <tr>
+                        <td><label class="control-label">Statues</label></td>
+                        <td><input class="form-control" ng-model="model.order.status" ng-disabled="ui.mode !== 'NEW' && ui.mode !== 'EDIT'"></td>
+                    </tr>  
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="col-xs-8 background-light">
+        <table class="control-table">
+            <col style="width: 15%"/>
+            <col style="width: 30%"/>
+            <col style="width: 30%"/>
+            <col style="width: 15%"/>
+            <col style="width: 10%"/>
+            <thead class="background-dark">
+                <tr>
+                    <th>
+                        <label>PO No</label>
+                        <input class="form-control" ng-model="model.temp.poNo" ng-disabled="ui.mode !== 'NEW' && ui.mode !== 'EDIT'">
+                    </th>
+                    <th>
+                        <label>Colour</label>
+                        <input class="form-control" ng-model="model.temp.colour" ng-disabled="ui.mode !== 'NEW' && ui.mode !== 'EDIT'">
+                    <th>
+                        <label>Size</label>
+                        <input class="form-control" ng-model="model.temp.size" ng-disabled="ui.mode !== 'NEW' && ui.mode !== 'EDIT'">
+                    </th>
+                    <th>
+                        <label>Order Qty</label>
+                        <input class="form-control" ng-model="model.temp.orderQty" ng-disabled="ui.mode !== 'NEW' && ui.mode !== 'EDIT'">
+                    </th>
+                    <th style="vertical-align: bottom; padding-bottom: 5px; padding-left: 5px">
+                        <button style="margin-top: 10px;" type="button" class="btn btn-primary" ng-click="ui.addDetail();" ng-disabled="ui.mode !== 'NEW' && ui.mode !== 'EDIT'">
+                            <span class="glyphicon glyphicon-plus"></span>
+                        </button>
+                    </th>
+                </tr>
+            </thead>
+        </table>
+
+        <table class="table-hover">
+            <col style="width: 10%">
+            <col style="width: 10%">
+            <col style="width: 10%">
+            <col style="width: 10%">
+            <col style="width: 10%">
+            <col style="width: 10%">
+            <col style="width: 10%">
+
+            <thead class="background-dark">
+                <tr>
+                    <th>PO No</th>
+                    <th>Colour</th>
+                    <th>Size</th>
+                    <th>Order Qty</th>
+                    <th>Del Qty</th>
+                    <th>Pro Qty</th>
+                    <th>Bal Qty</th>
+
+                </tr>
+            </thead>
+        </table>
+        <div class="smart-scroll-y" style="height: calc(100vh - 270px);">
+            <table class="table-hover">
+                <col style="width: 10%">
+                <col style="width: 10%">
+                <col style="width: 10%">
+                <col style="width: 10%">
+                <col style="width: 10%">
+                <col style="width: 10%">
+                <col style="width: 10%">
+                <tbody>
+                    <tr ng-repeat="order in model.order.orderDetail|filter : model.search.name">
+                        <td>{{order.poNo}}</td>
+                        <td>{{order.colour}}</td>
+                        <td>{{order.size}}</td>
+                        <td>{{order.orderQty}}</td>
+                        <td>{{order.deliverQty}}</td>
+                        <td>{{order.productQty}}</td>
+                        <td>{{order.balanceQty}}</td>
+
+                        <td class="text-right" style="padding-left: 5px;">
+                            <a class="btn btn-primary" ng-click="ui.edit(order, $index)"><span class="glyphicon glyphicon-edit"></span></a>
+                            <a class="btn btn-danger" ng-click="ui.delete(order.indexNo, $index)"><span class="glyphicon glyphicon-trash"></span></a>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="fab-container">
+    <a class="fab fab-lg fab-primary" ng-show="ui.mode === 'IDEAL' || ui.mode === 'SELECTED'" ng-click="ui.new();"><i class="glyphicon glyphicon-plus"></i></a>
+    <a class="fab fab-lg fab-primary" ng-show="ui.mode === 'NEW' || ui.mode === 'EDIT'" ng-click="ui.save();"><i class="glyphicon glyphicon-ok"></i></a>
+</div>

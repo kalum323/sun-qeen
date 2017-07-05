@@ -1,0 +1,49 @@
+<!--<style>
+    .full button span {
+        background-color: limegreen;
+        border-radius: 32px;
+        color: black;
+    }
+    .partially button span {
+        background-color: orange;
+        border-radius: 32px;
+        color: black;
+    }
+</style>-->
+<div>
+    <div class="col-lg-4">
+        <div style="display: flex; flex-flow: column; height: calc(100vh - 52px);">
+            <table class="table-calander">
+                <col style="width: 35%"/>
+                <col style="width: 65%"/>
+
+                <tbody>                
+                <label style="margin-top: 20px" class="control-label"><pre>Selected date is: <em>{{dt| date:'fullDate' }}</em></pre></label>
+                <tr>
+                    <td><label class="control-label">Date</label></td>
+                    <td><input type="date" class="form-control"  ng-model="dt"  ></td>
+                </tr>
+                <tr>
+                    <td><label class="control-label">Event Name</label></td>   
+                    <td><select ng-model="model.event.name">
+                        <option>Poya Day</option>
+                        <option>Other holiday</option>
+                    </select></td>
+                </tr>
+                
+                
+                </tbody>
+            </table>
+            <a class="btn btn-primary" ng-click="uimode.save()"> Save    <span class="glyphicon glyphicon-floppy-disk"></span></a>
+        </div> 
+    </div>
+    <div class="col-lg-8">
+        <div style="display:inline-block; min-height:290px;">
+            <div uib-datepicker ng-model="dt" class="well well-lgl" datepicker-options="options"></div>
+        </div>
+    </div>
+</div>
+<div class="fab-container">
+    <!--<a class="fab fab-lg fab-primary" ng-show="ui.mode === 'IDEAL' || ui.mode === 'SELECTED'" ng-click="ui.new();"><i class="glyphicon glyphicon-plus"></i></a>-->
+    <a class="fab fab-lg fab-primary" ng-click="uimode.saveAllDetail();"><i class="glyphicon glyphicon-ok"></i></a>
+</div>
