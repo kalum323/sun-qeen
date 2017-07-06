@@ -14,21 +14,71 @@
                                 }
                             });
                 };
+                factory.getMonthsDates = function (month, year, callback, errorcallback) {
+                    var url = systemConfig.apiUrl + "/api/sun-queen/master/calander/find-by-month-and-year/" + month + "/" + year;
+                    $http.get(url)
+                            .success(function (data, status, headers) {
+                                callback(data);
+                            })
+                            .error(function (data, status, headers) {
+                                if (errorcallback) {
+                                    errorcallback(data);
+                                }
+                            });
+                };
+                factory.getMonthsDatas = function (month, year, callback, errorcallback) {
+                    var url = systemConfig.apiUrl + "/api/sun-queen/master/calander/find-by-month-and-year-data/" + month + "/" + year;
+                    $http.get(url)
+                            .success(function (data, status, headers) {
+                                callback(data);
+                            })
+                            .error(function (data, status, headers) {
+                                if (errorcallback) {
+                                    errorcallback(data);
+                                }
+                            });
+                };
                 return factory;
             });
-            
+
     angular.module("AppModule")
             .controller("calanderController", function ($scope, calanderFactory, $filter, Notification) {
 
                 $scope.uimode = {};
                 $scope.model = {};
                 $scope.model.event = {};
-                $scope.model.data={
-                    dateList:[]
+                $scope.events = [];
+                $scope.model.data = {
+                    dateList: []
                 };
-                
-                $scope.noOfDateInMonth;
+                $scope.model.searchData = {
+                    dateList: []
+                };
 
+                $scope.uimode.getMonthsDates = function () {
+                    $scope.dt;
+                    var year = $filter('date')($scope.dt, 'yyyy');
+                    var month = $filter('date')($scope.dt, 'MM');
+                    calanderFactory.getMonthsDates(month, year, function (data) {
+                        angular.forEach(data, function (value) {
+                            var object = {
+                                date: null,
+                                status: null
+                            };
+                            object.date = $filter('date')(value.date, 'yyyy-MM-dd');
+                            object.status = value.status;
+
+                            $scope.events.push(object);
+                            //set currnt month
+                            $scope.dt = new Date();
+                        });
+                        console.log($scope.events);
+                    }, function (data) {
+                        Notification.error(data.message);
+                    });
+                };
+
+                $scope.noOfDateInMonth;
                 $scope.uimode.save = function () {
                     $scope.dt;
                     var year = $filter('date')($scope.dt, 'yyyy');
@@ -53,24 +103,80 @@
                             Notification.success('Update');
                             angular.forEach($scope.model.data.dateList, function (value, $index) {
                                 if ($filter('date')(value.date, 'yyyy-MM-dd') === $filter('date')($scope.dt, 'yyyy-MM-dd')) {
-                                    value.status=$scope.model.event.name;
-                                    $scope.model.data.dateList.splice($index,1);
+                                    value.status = $scope.model.event.name;
+                                    $scope.model.data.dateList.splice($index, 1);
                                     $scope.model.data.dateList.push(value);
                                 }
                             });
+
+                            $scope.events = $scope.model.data.dateList;
 
                         } else {
                             Notification.error("sd");
                         }
                     }
-                    console.log($scope.model.data.dateList);
+
 
                 };
-                $scope.uimode.saveAllDetail = function (){
+
+//                $scope.serachAvalableDateInList = function () {
+//                    $scope.dt;
+//                    var year = $filter('date')($scope.dt, 'yyyy');
+//                    var month = $filter('date')($scope.dt, 'MM');
+//
+//                    calanderFactory.getMonthsDatas(year, month, function (data) {
+//                        $scope.model.searchData.list = data;
+//                    }, function () {
+//
+//                    });
+//
+//                };
+
+//
+//                $scope.uimode.saves = function () {
+//                    $scope.dt;
+//                    var year = $filter('date')($scope.dt, 'yyyy');
+//                    var month = $filter('date')($scope.dt, 'MM');
+//
+//                    $scope.noOfDateInMonth = $scope.MonthDates(month, year);
+//                    console.log($scope.noOfDateInMonth);
+//                    if ($scope.model.searchData.dateList.length === 0) {
+//                        var date = 0;
+//                        for (var i = 1; i < $scope.noOfDateInMonth + 1; i++) {
+//                            var element = {};
+//                            element.date = new Date(year, month - 1, i);
+//                            element.status = null;
+//                            $scope.model.data.dateList.push(element);
+//                        }
+//                    } else {
+//                        angular.forEach($scope.model.searchData.dateList, function (searchDataValue) {
+////                            value.date = $scope.model.data.dateList
+//                            angular.forEach($scope.model.data.dateList, function (dataValue) {
+//                                if (searchDataValue.date.equals(dataValue.date)) {
+//                                    searchDataValue.status = dataValue.status;
+//                                }
+//                                
+//                            });
+//                        });
+//                    }
+//                };
+
+                $scope.uimode.saveAllDetail = function () {
                     var eventsList = $scope.model.data.dateList;
-                    console.log("eventsList");
-                    console.log(eventsList);
-                    calanderFactory.saveEvent(JSON.stringify(eventsList), function (){
+                    calanderFactory.saveEvent(JSON.stringify(eventsList), function (data) {
+//                            $scope.events = $scope.model.data.dateList;
+                        angular.forEach(data, function (value) {
+                            var object = {
+                                date: null,
+                                status: null
+                            };
+                            object.date = $filter('date')(value.date, 'yyyy-MM-dd');
+                            object.status = value.status;
+
+                            $scope.events.push(object);
+                            //set currnt month
+                            $scope.dt = object.date;
+                        });
                         Notification.success("date save  success !!!");
                     }, function (data) {
                         Notification.error(data.message);
@@ -110,7 +216,7 @@
                     $scope.dt = new Date(year, month, day);
                 };
 
-                
+
 
 //                var current = new Date();
 //                current.setDate(current.getDate() + 1);
@@ -148,21 +254,7 @@
 //                    // Not a leap year. Feb has 28 days.
 //                    return 28;
                 };
-                $scope.events = [
-                    {
-                        date: new Date(),
-                        status: 'full'
-                    },
-                    {
-                        date: new Date("2017-07-08"),
-                        status: 'partially'
 
-                    },
-                    {
-                        date: new Date("2017-07-09"),
-                        status: 'poyaday'
-                    }
-                ];
 
                 function getDayClass(data) {
                     var date = data.date,
@@ -189,7 +281,7 @@
                 $scope.ui.init = function () {
                     //set ideal mode
                     $scope.ui.mode = "IDEAL";
-
+                    $scope.uimode.getMonthsDates();
 
                 };
                 $scope.ui.init();

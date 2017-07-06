@@ -25,20 +25,23 @@
                 </tr>
                 <tr>
                     <td><label class="control-label">Event Name</label></td>   
-                    <td><select ng-model="model.event.name">
-                        <option>Poya Day</option>
-                        <option>Other holiday</option>
-                    </select></td>
-                </tr>
-                
-                
+                    <td>
+                        <select ng-model="model.event.name">
+                            <option>Workingday</option>
+                            <option>Poyaday</option>
+                            <option>OtherHollyDay</option>
+                            <option>Sunday</option>
+                            <option>Saturday</option>
+                        </select>
+                    </td>
+                </tr>     
                 </tbody>
             </table>
             <a class="btn btn-primary" ng-click="uimode.save()"> Save    <span class="glyphicon glyphicon-floppy-disk"></span></a>
         </div> 
     </div>
     <div class="col-lg-8">
-        <div style="display:inline-block; min-height:290px;">
+        <div style="display:inline-block; margin-top: 20px; min-height:290px;">
             <div uib-datepicker ng-model="dt" class="well well-lgl" datepicker-options="options"></div>
         </div>
     </div>

@@ -31,13 +31,16 @@ public class CalanderController {
 
     @RequestMapping(value = "/save-events", method = RequestMethod.POST)
     public Calander saveCustomer(@RequestBody List<Calander> eventList) {
-        System.out.println("controoler");
         return calanderService.saveEvents(eventList);
 
     }
     @RequestMapping(value = "/find-by-month-and-year/{month}/{year}", method = RequestMethod.GET)
     public List<Calander> findByMonthAndYear(@PathVariable("month") String month,@PathVariable("year") String year){
         return calanderService.findByMonthAndYear(month, year);
+    };
+    @RequestMapping(value = "/find-by-month-and-year-data/{month}/{year}", method = RequestMethod.GET)
+    public List<Calander> findByMonthAndYearData(@PathVariable("month") String month,@PathVariable("year") String year){
+        return calanderService.findByMonthAndYearData(month, year);
     };
             
             
