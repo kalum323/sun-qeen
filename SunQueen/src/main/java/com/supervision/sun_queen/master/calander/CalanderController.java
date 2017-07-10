@@ -6,8 +6,6 @@
 package com.supervision.sun_queen.master.calander;
 
 import com.supervision.sun_queen.master.calander.model.Calander;
-import com.supervision.sun_queen.master.calander.model.EventListModel;
-import com.supervision.sun_queen.master.customer.model.Customer;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;

@@ -6,10 +6,8 @@
 package com.supervision.sun_queen.master.calander;
 
 import com.supervision.sun_queen.master.calander.model.Calander;
-import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,10 +34,9 @@ public class CalanderService {
     public Calander saveEvents(List<Calander> eventList) {
        Calander calander= new Calander();
             for (Calander calander1 : eventList) {
-                System.out.println(calander1.getIndexNo());
-                System.out.println(calander1.getDate());
-                System.out.println(calander1.getStatus());
- 
+                if (calander1.getStatus() == null) {
+                    calander1.setStatus("Workingday");
+                }
                 calander = calanderRepository.save(calander1);
             }
         return calander;
