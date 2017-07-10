@@ -26,31 +26,22 @@ public class CalanderService {
     private CalanderRepository calanderRepository;
 
     public List<Calander> findByMonthAndYear(String month, String year) {
-       return calanderRepository.findByMonthAndYear(month, year);
+        return calanderRepository.findByMonthAndYear(month, year);
     }
-    public List<Calander> findMontPlanAvalability(Date date) {
-        return calanderRepository.findByDate(date);
+
+    public List<Calander> findMontPlanAvalability(Integer indexNo) {
+        return calanderRepository.findByIndexNo(indexNo);
     }
 
     public Calander saveEvents(List<Calander> eventList) {
-        Calander calander = eventList.get(1);
-        List<Calander> calanderList = findMontPlanAvalability(calander.getDate());
-        if (calanderList.isEmpty()) {
+       Calander calander= new Calander();
             for (Calander calander1 : eventList) {
+                System.out.println(calander1.getIndexNo());
+                System.out.println(calander1.getDate());
+                System.out.println(calander1.getStatus());
+ 
                 calander = calanderRepository.save(calander1);
             }
-        } else {
-            for (int i = 0; i < calanderList.size(); i++) {
-                Calander calander2 = calanderList.get(i);
-                for (Calander calander3 : eventList) {
-                    calander2.setStatus(calander3.getStatus());
-                    calander2.setDate(calander3.getDate());
-                    calander = calanderRepository.save(calander2);
-                }
-
-            }
-
-        }
         return calander;
     }
 

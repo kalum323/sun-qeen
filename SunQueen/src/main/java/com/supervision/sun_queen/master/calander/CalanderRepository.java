@@ -43,4 +43,6 @@ public interface CalanderRepository extends JpaRepository<Calander, Integer> {
     public List<Calander> findByMonthAndYearData(@Param("month") String month, @Param("year") String year);
     
     public List<Calander> findByDate(Date date);
+
+    public List<Calander> findByIndexNo(Integer indexNo);
 }
