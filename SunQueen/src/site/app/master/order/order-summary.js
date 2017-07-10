@@ -1,9 +1,34 @@
 (function () {
-    angular.module("AppModule")
-            .factory("calanderFactory", function ($http, systemConfig) {
+    angular.module("orderModule", ['ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ui-notification']);
+
+    //http factory
+    angular.module("orderModule")
+            .factory("orderFactory", function ($http, systemConfig) {
                 var factory = {};
-                factory.saveEventDetail = function (summary, callback, errorcallback) {
-                    var url = systemConfig.apiUrl + "/api/sun-queen/master/calander/save-events";
+
+                factory.findAllOrders = function (callback) {
+                    var url = systemConfig.apiUrl + "/api/sun-queen/master/order/find-all-order";
+                    $http.get(url)
+                            .success(function (data, status, headers) {
+                                callback(data);
+                            })
+                            .error(function (data, states, headers) {
+
+                            });
+                };
+                factory.findByOrderNo = function (order, callback) {
+                    var url = systemConfig.apiUrl + "/api/sun-queen/master/order/find-By-orderNo/" + order;
+                    $http.get(url)
+                            .success(function (data, status, headers) {
+                                callback(data);
+                            })
+                            .error(function (data, states, headers) {
+
+                            });
+                };
+
+                factory.saveOrder = function (summary, callback, errorcallback) {
+                    var url = systemConfig.apiUrl + "/api/sun-queen/master/order/save-order";
                     $http.post(url, summary)
                             .success(function (data, status, headers) {
                                 callback(data);
@@ -14,228 +39,154 @@
                                 }
                             });
                 };
-                factory.getAllMonthsData = function (month, year, callback, errorcallback) {
-                    var url = systemConfig.apiUrl + "/api/sun-queen/master/calander/find-by-month-and-year/" + month + "/" + year;
-                    $http.get(url)
+
+                factory.deleteOrder = function (indexNo, callback) {
+                    var url = systemConfig.apiUrl + "/api/sun-queen/master/order/delete-order/" + indexNo;
+                    $http.delete(url)
                             .success(function (data, status, headers) {
                                 callback(data);
                             })
-                            .error(function (data, status, headers) {
-                                if (errorcallback) {
-                                    errorcallback(data);
-                                }
+                            .error(function (data, states, headers) {
+
                             });
                 };
-                factory.getOnlyMonthsData = function (month, year, callback, errorcallback) {
-                    var url = systemConfig.apiUrl + "/api/sun-queen/master/calander/find-by-month-and-year-data/" + month + "/" + year;
-                    $http.get(url)
-                            .success(function (data, status, headers) {
-                                callback(data);
-                            })
-                            .error(function (data, status, headers) {
-                                if (errorcallback) {
-                                    errorcallback(data);
-                                }
-                            });
-                };
+
                 return factory;
             });
 
-    angular.module("AppModule")
-            .controller("calanderController", function ($scope, calanderFactory, $filter, Notification) {
+
+    angular.module("orderModule")
+            .controller("orderController", function ($scope, customerfactory, orderFactory, Notification, $timeout, $filter) {
+                //data models 
                 $scope.model = {};
+                //ui models
                 $scope.ui = {};
-                $scope.model.data = {
-                    dateList: []
-                };
-                $scope.model.saveData = {
-                    savelist: []
-                };
-                $scope.model.searchData = {
-                    searchDataList: []
-                };
-                $scope.events = [];
+                //http models
+                $scope.http = {};
 
-                $scope.ui.saveEvent = function () {
-                    $scope.dt;
-                    var year = $filter('date')($scope.dt, 'yyyy');
-                    var month = $filter('date')($scope.dt, 'MM');
+                $scope.model.customerList = [];
 
-                    calanderFactory.getOnlyMonthsData(month, year, function (data) {
-                        $scope.model.searchData.searchDataList = data;
-                        $scope.noOfDateInMonth = $scope.MonthDates(month, year);
-                        console.log($scope.noOfDateInMonth);
-                        if ($scope.model.searchData.searchDataList.length === 0) {
-                            if ($scope.model.data.dateList.length === 0) {
-                                console.log("if 2");
-                                var date = 0;
-                                for (var i = 1; i < $scope.noOfDateInMonth + 1; i++) {
-                                    console.log("for loop 1");
-                                    var element = {};
-                                    element.date = new Date(year, month - 1, i);
-                                    element.status = null;
-                                    $scope.model.data.dateList.push(element);
-                                }
-                            } else {
-                                console.log("else");
-                                $scope.dt;
-                                var date = $scope.model.data.dateList[0].date;
-                                var listYear = $filter('date')(date, 'yyyy');
-                                var listMonth = $filter('date')(date, 'MM');
-                                if (year === listYear && month === listMonth) {
-                                    Notification.success('Update');
-                                    angular.forEach($scope.model.data.dateList, function (value, $index) {
-                                        if ($filter('date')(value.date, 'yyyy-MM-dd') === $filter('date')($scope.dt, 'yyyy-MM-dd')) {
-                                            value.status = $scope.model.event.name;
-                                            $scope.model.data.dateList.splice($index, 1);
-                                            $scope.model.data.dateList.push(value);
-                                        }
-                                    });
-                                    $scope.events = $scope.model.data.dateList;
-                                    $scope.model.saveData.savelist = $scope.model.data.dateList;
-                                } else {
-                                    Notification.error("sd");
-                                }
-                            }
-                        } else {
-                            console.log("else else");
-                            var date = $scope.model.searchData.searchDataList[0].date;
-                            var listYear = $filter('date')(date, 'yyyy');
-                            var listMonth = $filter('date')(date, 'MM');
-                            if (year === listYear && month === listMonth) {
-                                Notification.success('Update');
-                                angular.forEach($scope.model.searchData.searchDataList, function (value, $index) {
-                                    if ($filter('date')(value.date, 'yyyy-MM-dd') === $filter('date')($scope.dt, 'yyyy-MM-dd')) {
-                                        var object = {
-                                            indexNo: null,
-                                            date: null,
-                                            status: "Workingday"
-                                        };
-                                        object.status = $scope.model.event.name;
-                                        object.date = value.date;
-                                        object.indexNo = value.indexNo;
-                                        $scope.model.searchData.searchDataList.splice($index, 1);
-                                        $scope.model.saveData.savelist.push(object);
-                                    }
-                                    $scope.events = $scope.model.saveData.savelist;
-                                });
-                            }
-                        }
-                    }, function () {
-                        console.log("cal data not avalable");
-                        console.log("cal data not avalable");
-                        console.log("cal data not avalable");
-                    });
+                $scope.model.order = {
+                    "indexNo": null,
+                    "orderNo": null,
+                    "date": null,
+                    "style": null,
+                    "brand": null,
+                    "qty": null,
+                    "status": null,
+                    "customer": null,
+                    "transactionNo": null,
+                    "orderDetail": []
                 };
 
-                $scope.ui.saveDetail = function () {
-                    var saveList = $scope.model.saveData.savelist;
-                    calanderFactory.saveEventDetail(saveList, function (data) {
-                        Notification.success("saveeeeeeeee");
-                    }, function () {
-
-                    });
+                $scope.model.temp = {
+                    "indexNo": null,
+                    "poNo": null,
+                    "colour": null,
+                    "size": null,
+                    "line": null,
+                    "orderQty": 0,
+                    "deliverQty": 0,
+                    "productQty": 0,
+                    "balanceQty": 0
                 };
 
-                $scope.ui.getAllMonthsData = function () {
-                    $scope.dt;
-                    var year = $filter('date')($scope.dt, 'yyyy');
-                    var month = $filter('date')($scope.dt, 'MM');
-                    calanderFactory.getAllMonthsData(month, year, function (data) {
-                        angular.forEach(data, function (value) {
-                            var object = {
-                                date: null,
-                                status: null
-                            };
-                            object.date = $filter('date')(value.date, 'yyyy-MM-dd');
-                            object.status = value.status;
+                $scope.ui.new = function () {
+                    $scope.ui.mode = "NEW";
+                    $timeout(function () {
+                        document.querySelectorAll("#pono")[0].focus();
+                    }, 10);
+                };
 
-                            $scope.events.push(object);
-                            //set currnt month
-                            $scope.dt = new Date();
-                        });
-                        console.log($scope.events);
+                $scope.ui.addDetail = function () {
+                    $scope.model.order.orderDetail.push($scope.model.temp);
+                    $scope.model.temp = {};
+                };
+
+                $scope.ui.edit = function (data, $index) {
+                    $scope.model.temp = {};
+                    $scope.model.temp = data;
+                    $scope.model.order.orderDetail.splice($index, 1);
+                };
+
+                $scope.ui.load = function (orderNo, e) {
+                    var code = e ? e.keyCode || e.which : 13;
+                    if (code === 13) {
+                        $scope.http.findByOrderNo(orderNo);
+                    }
+                };
+
+                $scope.http.findByOrderNo = function (no) {
+                    orderFactory.findByOrderNo(no, function (data) {
+                        $scope.model.order = data;
                     }, function (data) {
                         Notification.error(data.message);
                     });
+
                 };
 
-                $scope.ui.getSelectMonthsData = function () {
-                    $scope.dt;
-                    var year = $filter('date')($scope.dt, 'yyyy');
-                    var month = $filter('date')($scope.dt, 'MM');
+                $scope.ui.save = function () {
+                    $scope.http.saveOrder();
+                };
 
-                    calanderFactory.getOnlyMonthsData(month, year, function (data) {
-                        $scope.model.searchData.searchDataList = data;
-                        console.log("$scope.model.searchData.searchDataList");
-                        console.log($scope.model.searchData.searchDataList);
-                    }, function () {
+                $scope.ui.delete = function (indexNo, $index) {
+                    $scope.http.deleteOrder(indexNo, $index);
+                };
 
+                $scope.http.clearModel = function () {
+                    $scope.model.order = null;
+                };
+
+                $scope.http.deleteOrder = function (indexNo, $index) {
+                    orderFactory.deleteOrder(indexNo, function () {
+                        Notification.success("Order Delete success !!!");
+                        $scope.model.order.orderDetail.splice($index, 1);
+                    }, function (data) {
+                        Notification.error(data.message);
                     });
+
                 };
 
-//---------------------------- calander js function ------------------------------------
+                $scope.http.saveOrder = function () {
+                    var detail = $scope.model.order;
+                    console.log(detail);
+                    var detailJSON = JSON.stringify(detail);
+                    orderFactory.saveOrder(detailJSON, function (data) {
+                        Notification.success("Order Added success !!!");
+                        var dates = data.date;
+                        data.date = $filter('date')(dates, 'yyyy-MM-dd');
+                        $scope.model.orderList.push(data);
+                        $scope.http.clearModel();
+                    }, function (data) {
+                        Notification.error(data.message);
+                    });
 
-                $scope.today = function () {
-                    $scope.dt = new Date();
                 };
 
-                $scope.today();
-
-                $scope.clear = function () {
-                    $scope.dt = null;
-                };
-
-                $scope.options = {
-                    customClass: getDayClass,
-                    minDate: new Date(),
-                    showWeeks: false
-                };
-
-                // Disable weekend selection
-                function disabled(data) {
-                    var date = data.date,
-                            mode = data.mode;
-                    return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
-                }
-
-                $scope.toggleMin = function () {
-                    $scope.options.minDate = $scope.options.minDate ? null : new Date();
-                };
-
-                $scope.toggleMin();
-
-                $scope.setDate = function (year, month, day) {
-                    $scope.dt = new Date(year, month, day);
-                };
-
-                $scope.MonthDates = function (month, year) {
-                    return /8|3|5|10/.test(--month) ? 30 : month === 1 ? (!(year % 4) && year % 100) || !(year % 400) ? 29 : 28 : 31;
-                };
-
-                function getDayClass(data) {
-                    var date = data.date,
-                            mode = data.mode;
-                    if (mode === 'day') {
-                        var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
-
-                        for (var i = 0; i < $scope.events.length; i++) {
-                            var currentDay = new Date($scope.events[i].date).setHours(0, 0, 0, 0);
-                            if (dayToCheck === currentDay) {
-                                return $scope.events[i].status;
-                            }
+                $scope.model.customerLable = function (indexNo) {
+                    var customer;
+                    angular.forEach($scope.model.customerList, function (value) {
+                        if (value.indexNo === parseInt(indexNo)) {
+                            customer = value.indexNo + ' - ' + value.name;
+                            return;
                         }
-                    }
-
-                    return '';
-                }
+                    });
+                    return customer;
+                };
 
                 $scope.ui.init = function () {
                     //set ideal mode
                     $scope.ui.mode = "IDEAL";
-                    $scope.ui.getAllMonthsData();
+                    orderFactory.findAllOrders(function (data) {
+                        $scope.model.orderList = data;
 
+                    });
+                    customerfactory.findAllCustomer(function (data) {
+                        $scope.model.customerList = data;
+                    });
                 };
+
                 $scope.ui.init();
+
             });
 }());
